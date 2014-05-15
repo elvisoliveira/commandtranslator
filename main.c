@@ -12,26 +12,38 @@
 #include <string.h>             /* Strings         C89   */
 #include <stdbool.h>            /* Booleans        C99   */
 
-//const char * languages[] = {"en", "pt", "pt-br"};
-//const char * commands[] = {"from", "to"};
+// const char * languages[] = {"en", "pt", "pt-br"};
+const char * commands[] = {"f", "t", "v"};
+const char * icommands[] = {};
 
 const char * command;
 const char * value;
 
+int n = sizeof (commands) / sizeof (commands[0]);
+
+
 _Bool arguments_validation();
 
-int main(int argc, char ** argv) {
+int main(int argc, char * argv[]) {
 
-    // comparing two strings
-    // if (strcmp(argv[0], "translator"))
+    int w = 0;
 
-    // loop arguments
-    for (int i = 0; i < sizeof (argv); i++) {
-        // verify if arguments is present
+    for (int i = 1; i < argc; i++) {
         if (arguments_validation(argv[i])) {
-            printf("'%s'\n", command);
-            printf("'%s'\n", value);
+            for (int c = 0; c < n; c++) {
+                if (strcmp(commands[c], command) == 0) {
+                    printf("command %s is ok, the language is: %s\n", command, value);
+                }
+                else {
+                    icommands[w] = command;
+                    w++;
+                }
+            }
         }
+    }
+
+    for (int i = 0; i < w; i++) {
+        printf("%s\n", icommands[i]);
     }
 
     return (EXIT_SUCCESS);
@@ -56,7 +68,7 @@ _Bool arguments_validation(char * strings) {
     const char * pcreErrorStr;
 
     /* PCRE */
-    aStrRegex = ".*?((?:[a-z][a-z0-9_]*)).*?((?:[a-z][a-z0-9_]*))";
+    aStrRegex = "^(.{0,1})((?:[^~,]*))";
 
     // compile
     reCompiled = pcre_compile(aStrRegex, 0, &pcreErrorStr, &pcreErrorOffset, NULL);
@@ -96,7 +108,8 @@ _Bool arguments_validation(char * strings) {
             }
 
             return false;
-        } else {
+        }
+        else {
             // loop de found results
             for (j = 0; j < pcreExecRet; j++) {
                 switch (j) {
